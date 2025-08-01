@@ -7,9 +7,12 @@ from flask_jwt_extended import (
     JWTManager, create_access_token, get_jwt_identity, jwt_required
 )
 from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
+
 app = Flask(__name__)
 CORS(app)
 
@@ -117,6 +120,7 @@ def register():
 
     return jsonify({'message': 'Inscription réussie'}), 201
 
+print("DB URI:", os.getenv("SQLALCHEMY_DATABASE_URI"))
 
 
 class PromoCode(db.Model):
