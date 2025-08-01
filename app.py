@@ -7,7 +7,7 @@ from flask_jwt_extended import (
     JWTManager, create_access_token, get_jwt_identity, jwt_required
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import os
 app = Flask(__name__)
 CORS(app)
 
@@ -15,8 +15,8 @@ CORS(app)
 app.config['JWT_SECRET_KEY'] = 'une-cle-secrete-a-changer-en-prod'
 jwt = JWTManager(app)
 
-# 📦 PostgreSQL Config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://swam_user:Pytha1991@localhost:5432/swamNativ'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
