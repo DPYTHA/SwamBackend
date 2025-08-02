@@ -128,8 +128,6 @@ def register():
 
     return jsonify({'message': 'Inscription réussie'}), 201
 
-print("DB URI:", os.getenv("SQLALCHEMY_DATABASE_URI"))
-
 
 class PromoCode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
