@@ -17,14 +17,13 @@ app = Flask(__name__)
 CORS(app)
 
 load_dotenv()
-
-# 🔐 JWT Config
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-
 jwt = JWTManager(app)
+# 🔐 JWT Config
 
+print("DB URI:", os.getenv('SQLALCHEMY_DATABASE_URI'))  # debug
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy()
 db.init_app(app)
