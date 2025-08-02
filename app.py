@@ -99,6 +99,13 @@ class ChatMessage(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+
+# Route par défaut pour tester
+@app.route('/')
+def home():
+    return jsonify({"message": "Backend Flask actif 🚀"}), 200
+
 # 📝 Enregistrement
 @app.route('/register', methods=['POST'])
 def register():
