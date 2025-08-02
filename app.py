@@ -31,6 +31,7 @@ db.init_app(app)
 
 # 👤 Modèle Utilisateur
 class Users(db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
@@ -101,10 +102,7 @@ class ChatMessage(db.Model):
 
 
 
-# Route par défaut pour tester
-@app.route('/')
-def home():
-    return jsonify({"message": "Backend Flask actif 🚀"}), 200
+
 
 # 📝 Enregistrement
 @app.route('/register', methods=['POST'])
