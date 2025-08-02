@@ -22,7 +22,7 @@ jwt = JWTManager(app)
 
 print("DB URI:", os.getenv('DATABASE_URL'))  # debug
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:xUNZHcoWLYfZlJhFRjEBZWaxhCabwmMO@postgres.railway.internal:5432/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy()
