@@ -130,7 +130,7 @@ class PromoCode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(50), unique=True, nullable=False)
     description = db.Column(db.String(255))
-    type = db.Column(db.String(20))  # ex: 'percent', 'fixed', 'free_delivery'
+    type = db.Column(db.String(20))  
     value = db.Column(db.Float)
     date_expiration = db.Column(db.DateTime)
     usage_max = db.Column(db.Integer, default=1)  # combien max d’utilisations
@@ -329,6 +329,21 @@ def get_all_commandes():
         return jsonify({'error': 'Accès non autorisé'}), 403
     commandes = Commande.query.order_by(Commande.date_commande.desc()).all()
     return jsonify({'commandes': [cmd.serialize() for cmd in commandes]}), 200
+
+
+@app.route('/commande/<int:id>/etat', methods=['PUT'])
+@jwt_required()
+def changer_etat_commande(id):
+    data = request.get_json()
+    nouvel_etat = data.get('etat')  # 'en attente', 'en cours', 'livree'
+    commande = Commande.query.get(id)
+
+    if commande:
+        commande.etat = nouvel_etat
+        db.session.commit()
+        return jsonify({'msg': 'État mis à jour avec succès'}), 200
+    return jsonify({'msg': 'Commande non trouvée'}), 404
+
 
 
 @app.route('/api/users', methods=['GET'])
