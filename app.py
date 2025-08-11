@@ -84,19 +84,6 @@ class Commande(db.Model):
         }
 
 
-class Resto(db.Model):
-    __tablename__ = 'resto'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
-    nom = db.Column(db.String(100), nullable=False)
-    prenom = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
-    panier = db.Column(db.JSON, nullable=False)  # Stocke la liste des plats (JSON)
-    adresse_livraison = db.Column(db.String(200), nullable=False)
-    frais_livraison = db.Column(db.Float, nullable=False)
-    montant_total = db.Column(db.Float, nullable=False)
-    date_commande = db.Column(db.DateTime, default=datetime.utcnow)
-    statut = db.Column(db.Integer, default=0)  # 0=En attente, 1=En cours, 2=Livrée
 
 # 🔍 Modèle Historique (lecture seule)
 class CommandeHistorique(db.Model):
@@ -168,52 +155,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
-@app.route('/resto', methods=['POST'])
-@jwt_required()
-def create_resto():
-    user_id = get_jwt_identity()
-
-    data = request.get_json()
-    required_fields = ['nom', 'prenom', 'phone', 'panier', 'adresse_livraison', 'frais_livraison', 'montant_total']
-
-    for field in required_fields:
-        if field not in data:
-            return jsonify({'message': f'Le champ {field} est manquant'}), 400
-
-    try:
-        nouvelle_commande = Resto(
-            user_id=user_id,
-            nom=data['nom'],
-            prenom=data['prenom'],
-            phone=data['phone'],
-            panier=data['panier'],
-            adresse_livraison=data['adresse_livraison'],
-            frais_livraison=float(data['frais_livraison']),
-            montant_total=float(data['montant_total']),
-            date_commande=datetime.utcnow(),
-            statut=0
-        )
-        db.session.add(nouvelle_commande)
-        db.session.commit()
-
-        return jsonify({'message': 'Commande resto créée avec succès', 'commande': {
-            'id': nouvelle_commande.id,
-            'nom': nouvelle_commande.nom,
-            'prenom': nouvelle_commande.prenom,
-            'phone': nouvelle_commande.phone,
-            'panier': nouvelle_commande.panier,
-            'adresse_livraison': nouvelle_commande.adresse_livraison,
-            'frais_livraison': nouvelle_commande.frais_livraison,
-            'montant_total': nouvelle_commande.montant_total,
-            'date_commande': nouvelle_commande.date_commande.isoformat(),
-            'statut': nouvelle_commande.statut
-        }}), 201
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'message': 'Erreur serveur', 'error': str(e)}), 500
-    
 
 @app.route('/promo-codes', methods=['GET'])
 @jwt_required()
@@ -492,68 +433,6 @@ def update_profile():
     db.session.commit()
     return jsonify({"message": "Profil mis à jour"}), 200
 
-#TWILIO
-
-if os.getenv("RAILWAY_ENVIRONMENT") is None:  
-    load_dotenv()
-ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
-AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-FROM_PHONE = os.getenv("TWILIO_PHONE_NUMBER")
-TO_PHONE = os.getenv("MY_PHONE_NUMBER")
-
-
-# Pour WhatsApp Twilio Sandbox
-FROM_WHATSAPP = os.getenv("TWILIO_WHATSAPP_NUMBER") # Numéro WhatsApp Twilio
-TO_WHATSAPP = os.getenv("MY_WHATSAPP_NUMBER")  # Ton numéro WhatsApp
-
-client = Client(ACCOUNT_SID, AUTH_TOKEN)
-
-# 📩 Fonction pour envoyer un SMS
-def envoyer_sms(message):
-    client.messages.create(
-        body=message,
-        from_=FROM_PHONE,
-        to=TO_PHONE
-    )
-
-# 📩 Fonction pour envoyer un message WhatsApp
-def envoyer_whatsapp(message):
-    client.messages.create(
-        body=message,
-        from_=FROM_WHATSAPP,  # ✅ on utilise la variable définie plus haut
-        to=TO_WHATSAPP
-    )
-
-# 📦 Endpoint pour recevoir une commande
-@app.route('/resto', methods=['POST'])
-def nouvelle_commande():
-    data = request.json
-    nom = data.get('nom')
-    prenom = data.get('prenom')
-    phone = data.get('phone')
-    panier = data.get('panier', [])
-    adresse = data.get('adresse_livraison')
-    total = data.get('montant_total')
-    date_cmd = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-
-    # 📩 Préparer le message
-    message = (
-        f"📦 Nouvelle commande !\n"
-        f"Client: {prenom} {nom}\n"
-        f"Tel: {phone}\n"
-        f"Adresse: {adresse}\n"
-        f"Total: {total}€\n"
-        f"Date: {date_cmd}\n"
-        f"Produits: {', '.join([item['nom'] for item in panier])}"
-    )
-
-    # ✅ Envoi SMS
-    envoyer_sms(message)
-
-    # ✅ (Optionnel) Envoi WhatsApp
-    # envoyer_whatsapp(message)
-
-    return jsonify({"status": "Commande reçue et notification envoyée"}), 200
 
 
 
