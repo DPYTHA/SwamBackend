@@ -106,8 +106,8 @@ class ChatMessage(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-class Resto(db.Model):
-    __tablename__ = 'resto'
+class Restau(db.Model):
+    __tablename__ = 'restau'
     id = db.Column(db.Integer, primary_key=True)
     nom_plat = db.Column(db.String(255), nullable=False)
     prix = db.Column(db.Integer, nullable=False)
@@ -449,7 +449,7 @@ def ajouter_commandeResto():
     data = request.get_json()
 
     try:
-        nouvelle_commande = Resto(
+        nouvelle_commande = Restau(
             nom_plat=data.get('nom_plat'),
             prix=data.get('prix'),
             composition=data.get('composition'),
@@ -465,7 +465,7 @@ def ajouter_commandeResto():
 # Route pour voir toutes les commandes
 @app.route('/commandesResto', methods=['GET'])
 def lister_commandesResto():
-    commandes = Resto.query.order_by(Resto.date_commande.desc()).all()
+    commandes = Restau.query.order_by(Restau.date_commande.desc()).all()
     resultats = []
     for c in commandes:
         resultats.append({
