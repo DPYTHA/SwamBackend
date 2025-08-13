@@ -106,7 +106,14 @@ class ChatMessage(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
+class Resto(db.Model):
+    __tablename__ = 'resto'
+    id = db.Column(db.Integer, primary_key=True)
+    nom_plat = db.Column(db.String(255), nullable=False)
+    prix = db.Column(db.Integer, nullable=False)
+    composition = db.Column(db.Text)
+    quantite = db.Column(db.Integer, default=1)
+    date_commande = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 
@@ -435,6 +442,41 @@ def update_profile():
 
 
 
+
+# Route pour enregistrer une commande
+@app.route('/commandeResto', methods=['POST'])
+def ajouter_commandeResto():
+    data = request.get_json()
+
+    try:
+        nouvelle_commande = Resto(
+            nom_plat=data.get('nom_plat'),
+            prix=data.get('prix'),
+            composition=data.get('composition'),
+            quantite=data.get('quantite', 1)
+        )
+        db.session.add(nouvelle_commande)
+        db.session.commit()
+        return jsonify({"message": "Commande enregistrée avec succès"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+    
+
+# Route pour voir toutes les commandes
+@app.route('/commandesResto', methods=['GET'])
+def lister_commandesResto():
+    commandes = Resto.query.order_by(Resto.date_commande.desc()).all()
+    resultats = []
+    for c in commandes:
+        resultats.append({
+            "id": c.id,
+            "nom_plat": c.nom_plat,
+            "prix": c.prix,
+            "composition": c.composition,
+            "quantite": c.quantite,
+            "date_commande": c.date_commande.strftime("%Y-%m-%d %H:%M:%S")
+        })
+    return jsonify(resultats)
 
 # 🚀 Démarrage
 if __name__ == '__main__':
