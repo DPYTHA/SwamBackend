@@ -116,6 +116,21 @@ class Restau(db.Model):
     date_commande = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+# 🔹 Modèle Resto
+class Resto(db.Model):
+    __tablename__ = "Resto"
+    id = db.Column(db.Integer, primary_key=True)
+    nom = db.Column(db.String(100), nullable=False)
+    prenom = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    panier = db.Column(db.JSON, nullable=False)
+    adresse_livraison = db.Column(db.Text, nullable=False)
+    frais_livraison = db.Column(db.Numeric(10, 2), nullable=False)
+    montant_total = db.Column(db.Numeric(10, 2), nullable=False)
+    date_commande = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+
+
 
 # 📝 Enregistrement
 @app.route('/register', methods=['POST'])
@@ -444,7 +459,7 @@ def update_profile():
 
 
 # Route pour enregistrer une commande
-@app.route('/commandeResto', methods=['POST'])
+@app.route('/commandeRestau', methods=['POST'])
 def ajouter_commandeResto():
     data = request.get_json()
 
@@ -463,7 +478,7 @@ def ajouter_commandeResto():
     
 
 # Route pour voir toutes les commandes
-@app.route('/commandesResto', methods=['GET'])
+@app.route('/commandesRestau', methods=['GET'])
 def lister_commandesResto():
     commandes = Restau.query.order_by(Restau.date_commande.desc()).all()
     resultats = []
@@ -477,6 +492,34 @@ def lister_commandesResto():
             "date_commande": c.date_commande.strftime("%Y-%m-%d %H:%M:%S")
         })
     return jsonify(resultats)
+
+
+
+
+# 🔹 Endpoint pour enregistrer une commande
+@app.route('/commandesResto', methods=['POST'])
+def ajouter_commande3():
+    data = request.get_json()
+
+    try:
+        nouvelle_commande = Resto(
+            nom=data['nom'],
+            prenom=data['prenom'],
+            phone=data['phone'],
+            panier=data['panier'],
+            adresse_livraison=data['adresse_livraison'],
+            frais_livraison=data['frais_livraison'],
+            montant_total=data['montant_total'],
+            date_commande=datetime.fromisoformat(data['date_commande'].replace('Z', '+00:00'))
+        )
+
+        db.session.add(nouvelle_commande)
+        db.session.commit()
+
+        return jsonify({"message": "Commande enregistrée avec succès"}), 201
+
+    except Exception as e:
+        return jsonify({"message": "Erreur lors de l'enregistrement", "error": str(e)}), 400
 
 # 🚀 Démarrage
 if __name__ == '__main__':
