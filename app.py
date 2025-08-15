@@ -279,7 +279,7 @@ def get_commandes():
 
 @app.route('/commande', methods=['GET'])
 @jwt_required()  # si tu utilises JWT
-def get_commandes():
+def get_commandes123():
     commandes = Commande.query.all()
     commandes_list = [
         {
