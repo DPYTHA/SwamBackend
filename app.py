@@ -266,7 +266,7 @@ def create_commande():
 # 🔹 Lister toutes les commandes pour l’utilisateur connecté
 @app.route('/commandes', methods=['GET'])
 @jwt_required()
-def get_commandes():
+def get_users_commandes():
     try:
         user_id = get_jwt_identity()
         commandes = Commande.query.filter_by(user_id=user_id).order_by(Commande.date_commande.desc()).all()
@@ -278,7 +278,7 @@ def get_commandes():
 # 🔹 Lister toutes les commandes pour l’admin
 @app.route('/admin/commandes', methods=['GET'])
 @jwt_required()
-def get_all_commandes():
+def get_for_admin():
     try:
         user_id = get_jwt_identity()
         user = Users.query.get(user_id)
@@ -345,7 +345,7 @@ def get_messages():
 
 # 📦 Obtenir une commande par tracking code
 @app.route('/commande/by-tracking-code/<code>', methods=['GET'])
-def get_commande_by_tracking(code):
+def get_com_by_tracking(code):
     commande = Commande.query.filter_by(tracking_code=code).first()
     if commande:
         return jsonify({'commande': commande.serialize()}), 200
