@@ -228,13 +228,13 @@ def login():
         })
     return jsonify({"success": False, "message": "Identifiants invalides"}), 401
 
-# ➕ Créer une commande
+# 🔹 Créer une commande
 @app.route('/commande', methods=['POST'])
 @jwt_required()
 def create_commande():
     try:
         data = request.get_json()
-        user_id = int(get_jwt_identity()) 
+        user_id = int(get_jwt_identity())
 
         required_fields = ['type', 'depart', 'arrivee', 'produits', 'frais', 'montant_total', 'tracking_code']
         for field in required_fields:
@@ -246,7 +246,7 @@ def create_commande():
             depart=data['depart'],
             arrivee=data['arrivee'],
             produits=data['produits'],
-            montant_colis = float(data['montant_colis']) if data.get('montant_colis') not in [None, ''] else 0.0,
+            montant_colis=float(data['montant_colis']) if data.get('montant_colis') not in [None, ''] else 0.0,
             frais=float(data['frais']),
             montant_total=float(data['montant_total']),
             tracking_code=data['tracking_code'],
@@ -262,7 +262,8 @@ def create_commande():
         db.session.rollback()
         return jsonify({'error': f'Erreur lors de l’enregistrement : {str(e)}'}), 500
 
-# 📄 Obtenir les commandes d’un utilisateur
+
+# 🔹 Lister toutes les commandes pour l’utilisateur connecté
 @app.route('/commandes', methods=['GET'])
 @jwt_required()
 def get_commandes():
@@ -270,34 +271,38 @@ def get_commandes():
         user_id = get_jwt_identity()
         commandes = Commande.query.filter_by(user_id=user_id).order_by(Commande.date_commande.desc()).all()
         return jsonify({"commandes": [cmd.serialize() for cmd in commandes]}), 200
-       
     except Exception as e:
         return jsonify({"error": f"Erreur lors de la récupération des commandes : {str(e)}"}), 500
-#pour le chat message 
 
 
+# 🔹 Lister toutes les commandes pour l’admin
+@app.route('/admin/commandes', methods=['GET'])
+@jwt_required()
+def get_all_commandes():
+    try:
+        user_id = get_jwt_identity()
+        user = Users.query.get(user_id)
 
-@app.route('/commande', methods=['GET'])
-@jwt_required()  # si tu utilises JWT
-def get_commandes123():
-    commandes = Commande.query.all()
-    commandes_list = [
-        {
-            "id": c.id,
-            "type": c.type,
-            "depart": c.depart,
-            "arrivee": c.arrivee,
-            "produits": c.produits,
-            "montant_colis": float(c.montant_colis),
-            "frais": float(c.frais),
-            "montant_total": float(c.montant_total),
-            "tracking_code": c.tracking_code,
-            "statut": c.statut,
-            "user_id": c.user_id
-        }
-        for c in commandes
-    ]
-    return jsonify({"commandes": commandes_list})
+        if not user or user.role != 'admin':
+            return jsonify({'error': 'Accès non autorisé'}), 403
+
+        commandes = Commande.query.order_by(Commande.date_commande.desc()).all()
+        return jsonify({'commandes': [cmd.serialize() for cmd in commandes]}), 200
+    except Exception as e:
+        return jsonify({"error": f"Erreur lors de la récupération des commandes : {str(e)}"}), 500
+
+
+# 🔹 Obtenir une commande par tracking code
+@app.route('/commande/<string:tracking_code>', methods=['GET'])
+@jwt_required()
+def get_commande_by_tracking(tracking_code):
+    try:
+        commande = Commande.query.filter_by(tracking_code=tracking_code).first()
+        if commande:
+            return jsonify({'commande': commande.serialize()}), 200
+        return jsonify({'error': 'Commande introuvable'}), 404
+    except Exception as e:
+        return jsonify({"error": f"Erreur lors de la récupération de la commande : {str(e)}"}), 500
 
 # ✅ Envoyer un message
 @app.route('/api/chat/send', methods=['POST'])
