@@ -497,49 +497,43 @@ def lister_commandesResto():
 #pour enregistrer commande Campement .
 
 # 🔹 Endpoint pour enregistrer une commande
-@app.route('/commandesResto', methods=['POST'])
-def ajouter_commande3():
-    data = request.get_json()
+@app.route('/commandesResto', methods=['GET', 'POST'])
+def commandes_resto():
+    if request.method == 'POST':
+        data = request.get_json()
+        try:
+            nouvelle_commande = Resto(
+                nom=data['nom'],
+                prenom=data['prenom'],
+                phone=data['phone'],
+                panier=data['panier'],
+                adresse_livraison=data['adresse_livraison'],
+                frais_livraison=data['frais_livraison'],
+                montant_total=data['montant_total'],
+                date_commande=datetime.fromisoformat(data['date_commande'].replace('Z', '+00:00'))
+            )
+            db.session.add(nouvelle_commande)
+            db.session.commit()
+            return jsonify({"message": "Commande enregistrée avec succès"}), 201
+        except Exception as e:
+            return jsonify({"message": "Erreur lors de l'enregistrement", "error": str(e)}), 400
 
-    try:
-        nouvelle_commande = Resto(
-            nom=data['nom'],
-            prenom=data['prenom'],
-            phone=data['phone'],
-            panier=data['panier'],
-            adresse_livraison=data['adresse_livraison'],
-            frais_livraison=data['frais_livraison'],
-            montant_total=data['montant_total'],
-            date_commande=datetime.fromisoformat(data['date_commande'].replace('Z', '+00:00'))
-        )
-
-        db.session.add(nouvelle_commande)
-        db.session.commit()
-
-        return jsonify({"message": "Commande enregistrée avec succès"}), 201
-
-    except Exception as e:
-        return jsonify({"message": "Erreur lors de l'enregistrement", "error": str(e)}), 400
-    
-#pour recuperer sur mon admin 
-
-@app.route('/commandesRestor', methods=['GET'])
-def get_commandes():
-    commandes = Resto.query.order_by(Resto.date_commande.desc()).all()
-    data = []
-    for cmd in commandes:
-        data.append({
-            "id": cmd.id,
-            "nom": cmd.nom,
-            "prenom": cmd.prenom,
-            "phone": cmd.phone,
-            "panier": cmd.panier,
-            "adresse_livraison": cmd.adresse_livraison,
-            "frais_livraison": str(cmd.frais_livraison),
-            "montant_total": str(cmd.montant_total),
-            "date_commande": cmd.date_commande.isoformat()
-        })
-    return jsonify(data)
+    elif request.method == 'GET':
+        commandes = Resto.query.order_by(Resto.date_commande.desc()).all()
+        data = []
+        for cmd in commandes:
+            data.append({
+                "id": cmd.id,
+                "nom": cmd.nom,
+                "prenom": cmd.prenom,
+                "phone": cmd.phone,
+                "panier": cmd.panier,
+                "adresse_livraison": cmd.adresse_livraison,
+                "frais_livraison": str(cmd.frais_livraison),
+                "montant_total": str(cmd.montant_total),
+                "date_commande": cmd.date_commande.isoformat()
+            })
+        return jsonify(data)
 
 
 # 🚀 Démarrage
