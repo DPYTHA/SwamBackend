@@ -275,6 +275,30 @@ def get_commandes():
         return jsonify({"error": f"Erreur lors de la récupération des commandes : {str(e)}"}), 500
 #pour le chat message 
 
+
+
+@app.route('/commande', methods=['GET'])
+@jwt_required()  # si tu utilises JWT
+def get_commandes():
+    commandes = Commande.query.all()
+    commandes_list = [
+        {
+            "id": c.id,
+            "type": c.type,
+            "depart": c.depart,
+            "arrivee": c.arrivee,
+            "produits": c.produits,
+            "montant_colis": float(c.montant_colis),
+            "frais": float(c.frais),
+            "montant_total": float(c.montant_total),
+            "tracking_code": c.tracking_code,
+            "statut": c.statut,
+            "user_id": c.user_id
+        }
+        for c in commandes
+    ]
+    return jsonify({"commandes": commandes_list})
+
 # ✅ Envoyer un message
 @app.route('/api/chat/send', methods=['POST'])
 def send_message():
