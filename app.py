@@ -494,7 +494,7 @@ def lister_commandesResto():
     return jsonify(resultats)
 
 
-
+#pour enregistrer commande Campement .
 
 # 🔹 Endpoint pour enregistrer une commande
 @app.route('/commandesResto', methods=['POST'])
@@ -520,6 +520,27 @@ def ajouter_commande3():
 
     except Exception as e:
         return jsonify({"message": "Erreur lors de l'enregistrement", "error": str(e)}), 400
+    
+#pour recuperer sur mon admin 
+
+@app.route('/commandesRestor', methods=['GET'])
+def get_commandes():
+    commandes = Resto.query.order_by(Resto.date_commande.desc()).all()
+    data = []
+    for cmd in commandes:
+        data.append({
+            "id": cmd.id,
+            "nom": cmd.nom,
+            "prenom": cmd.prenom,
+            "phone": cmd.phone,
+            "panier": cmd.panier,
+            "adresse_livraison": cmd.adresse_livraison,
+            "frais_livraison": str(cmd.frais_livraison),
+            "montant_total": str(cmd.montant_total),
+            "date_commande": cmd.date_commande.isoformat()
+        })
+    return jsonify(data)
+
 
 # 🚀 Démarrage
 if __name__ == '__main__':
