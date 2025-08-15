@@ -364,17 +364,6 @@ def changer_disponibilite(user_id):
     else:
         return jsonify({"error": "Livreur introuvable"}), 404
 
-# 📦 Liste complète des commandes (admin uniquement)
-@app.route('/admin/commandes', methods=['GET'])
-@jwt_required()
-def get_all_commandes():
-    user_id = get_jwt_identity()
-    user = Users.query.get(user_id)
-
-    if not user or user.role != 'admin':
-        return jsonify({'error': 'Accès non autorisé'}), 403
-    commandes = Commande.query.order_by(Commande.date_commande.desc()).all()
-    return jsonify({'commandes': [cmd.serialize() for cmd in commandes]}), 200
 
 @app.route('/commande/<int:id>/etat', methods=['PUT'])
 @jwt_required()
