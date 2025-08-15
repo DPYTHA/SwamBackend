@@ -292,17 +292,7 @@ def get_all_commandes():
         return jsonify({"error": f"Erreur lors de la récupération des commandes : {str(e)}"}), 500
 
 
-# 🔹 Obtenir une commande par tracking code
-@app.route('/commande/<string:tracking_code>', methods=['GET'])
-@jwt_required()
-def get_commande_by_tracking(tracking_code):
-    try:
-        commande = Commande.query.filter_by(tracking_code=tracking_code).first()
-        if commande:
-            return jsonify({'commande': commande.serialize()}), 200
-        return jsonify({'error': 'Commande introuvable'}), 404
-    except Exception as e:
-        return jsonify({"error": f"Erreur lors de la récupération de la commande : {str(e)}"}), 500
+
 
 # ✅ Envoyer un message
 @app.route('/api/chat/send', methods=['POST'])
