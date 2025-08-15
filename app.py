@@ -497,28 +497,10 @@ def lister_commandesResto():
 #pour enregistrer commande Campement .
 
 # 🔹 Endpoint pour enregistrer une commande
-@app.route('/commandesResto', methods=['GET', 'POST'])
+@app.route('/commandesResto', methods=['GET', 'POST', 'PUT'])
 def commandes_resto():
-    if request.method == 'POST':
-        data = request.get_json()
-        try:
-            nouvelle_commande = Resto(
-                nom=data['nom'],
-                prenom=data['prenom'],
-                phone=data['phone'],
-                panier=data['panier'],
-                adresse_livraison=data['adresse_livraison'],
-                frais_livraison=data['frais_livraison'],
-                montant_total=data['montant_total'],
-                date_commande=datetime.fromisoformat(data['date_commande'].replace('Z', '+00:00'))
-            )
-            db.session.add(nouvelle_commande)
-            db.session.commit()
-            return jsonify({"message": "Commande enregistrée avec succès"}), 201
-        except Exception as e:
-            return jsonify({"message": "Erreur lors de l'enregistrement", "error": str(e)}), 400
-
-    elif request.method == 'GET':
+    # 📌 1 - Récupérer toutes les commandes
+    if request.method == 'GET':
         commandes = Resto.query.order_by(Resto.date_commande.desc()).all()
         data = []
         for cmd in commandes:
@@ -533,7 +515,57 @@ def commandes_resto():
                 "montant_total": str(cmd.montant_total),
                 "date_commande": cmd.date_commande.isoformat()
             })
-        return jsonify(data)
+        return jsonify(data), 200
+
+    # 📌 2 - Ajouter une commande
+    elif request.method == 'POST':
+        data = request.get_json()
+        try:
+            nouvelle_commande = Resto(
+                nom=data['nom'],
+                prenom=data['prenom'],
+                phone=data['phone'],
+                panier=data['panier'],
+                adresse_livraison=data['adresse_livraison'],
+                frais_livraison=data['frais_livraison'],
+                montant_total=data['montant_total'],
+                date_commande=datetime.fromisoformat(
+                    data['date_commande'].replace('Z', '+00:00')
+                )
+            )
+            db.session.add(nouvelle_commande)
+            db.session.commit()
+            return jsonify({"message": "Commande enregistrée avec succès"}), 201
+        except Exception as e:
+            return jsonify({"message": "Erreur lors de l'enregistrement", "error": str(e)}), 400
+
+    # 📌 3 - Modifier une commande existante
+    elif request.method == 'PUT':
+        data = request.get_json()
+        commande_id = data.get('id')
+        if not commande_id:
+            return jsonify({"message": "ID de la commande manquant"}), 400
+
+        commande = Resto.query.get(commande_id)
+        if not commande:
+            return jsonify({"message": "Commande introuvable"}), 404
+
+        # Mettre à jour tous les champs si fournis
+        commande.nom = data.get('nom', commande.nom)
+        commande.prenom = data.get('prenom', commande.prenom)
+        commande.phone = data.get('phone', commande.phone)
+        commande.panier = data.get('panier', commande.panier)
+        commande.adresse_livraison = data.get('adresse_livraison', commande.adresse_livraison)
+        commande.frais_livraison = data.get('frais_livraison', commande.frais_livraison)
+        commande.montant_total = data.get('montant_total', commande.montant_total)
+
+        if 'date_commande' in data:
+            commande.date_commande = datetime.fromisoformat(
+                data['date_commande'].replace('Z', '+00:00')
+            )
+
+        db.session.commit()
+        return jsonify({"message": "Commande mise à jour avec succès"}), 200
 
 
 # 🚀 Démarrage
