@@ -50,7 +50,7 @@ export default function EditProfileScreen({ navigation }) {
         ...(password ? { password } : {}) // ajoute password uniquement s’il est modifié
       };
 
-      const response = await fetch('http://192.168.1.5:5000/update-profile', {
+      const response = await fetch('https://web-production-9c72c.up.railway.app/update-profile', {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

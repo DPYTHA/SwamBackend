@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { Linking } from 'react-native';
+
 
 const LoginScreen = ({ navigation }) => {
   const [phone, setPhone] = useState('');
@@ -22,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
   }
 
   try {
-    const response = await axios.post('http://192.168.1.5:5000/login', {
+    const response = await axios.post('https://web-production-9c72c.up.railway.app/login', {
       telephone: phone,
       password: password,
     });
@@ -89,6 +91,13 @@ const LoginScreen = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.link}>Pas encore inscrit ? S'inscrire</Text>
       </TouchableOpacity>
+
+     <TouchableOpacity
+     onPress={() => {
+      Linking.openURL('https://wa.me/message/XTQKCCN4ZCN7L1');
+  }}>
+    <Text style={styles.linked}>Mot de passe oublié ? Contactez-nous sur WhatsApp</Text>
+    </TouchableOpacity>
     </View>
   );
 };
@@ -102,4 +111,5 @@ const styles = StyleSheet.create({
   button: { backgroundColor: 'orangered', padding: 15, borderRadius: 8 },
   buttonText: { color: '#fff', fontWeight: 'bold', textAlign: 'center' },
   link: { color: 'black', marginTop: 20, textAlign: 'center' },
+  linked:{ color: 'orangered', marginTop: 24, textAlign: 'center' }
 });

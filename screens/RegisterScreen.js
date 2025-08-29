@@ -25,7 +25,7 @@ export default function RegisterScreen({ navigation }) {
     };
 
     try {
-      const response = await axios.post('http://192.168.1.5:5000/register', userData, {
+      const response = await axios.post('https://web-production-9c72c.up.railway.app/register', userData, {
         timeout: 5000,
       });
 
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 50,
     color: 'orangered',
-    paddingTop: 100,
+    paddingTop: 80,
     textAlign: 'center',
   },
   input: {

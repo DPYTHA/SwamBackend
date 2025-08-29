@@ -1,0 +1,3 @@
+a7cb17f0149139c480d1db1c4a67925ce7e8b5d2,MODIFY,regular-file,app.py,18933,498-500
+9090621c3a24e6e50a8d397cc2abf0f64ef6dfe4,MODIFY,regular-file,env/Lib/site-packages/twilio-9.7.0.dist-info/METADATA,13640,168
+b16f85bf5b856a6f0bdf0cbe8b76409a343513e2,MODIFY,regular-file,env/Lib/site-packages/twilio/base/client_base.py,9592,44;46

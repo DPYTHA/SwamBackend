@@ -1,14 +1,28 @@
 {
-  "android": {
-    "package": "com.pytha.swamapp"
-  },
-  "plugins": [
-    "expo-secure-store"
-  ],
-  "extra": {
-    "eas": {
-      "projectId": "77afe6a4-d96d-4cfa-8346-80d578d037c0"
-    }
-  },
-  "owner": "pytha"
+  "expo": {
+    "name": "Swam",
+    "slug": "swamapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/swambackground.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": ["expo-secure-store"],
+    "android": {
+      "package": "com.pytha.swamapp",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "77afe6a4-d96d-4cfa-8346-80d578d037c0"
+      }
+    },
+    "owner": "pytha"
+  }
 }

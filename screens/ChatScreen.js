@@ -48,7 +48,7 @@ useEffect(() => {
 
   const loadMessages = async () => {
   try {
-    const res = await fetch(`http://192.168.1.5:5000/api/chat/messages?sender_id=${senderId}&receiver_id=${receiverId}`, {
+    const res = await fetch(`https://web-production-9c72c.up.railway.app/api/chat/messages?sender_id=${senderId}&receiver_id=${receiverId}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -69,7 +69,7 @@ const sendMessage = async () => {
   console.log('Envoi message:', message);
   console.log('Envoi message:', message, 'senderId:', senderId, 'receiverId:', receiverId);
   try {
-    const response = await fetch('http://192.168.1.5:5000/api/chat/send', {
+    const response = await fetch('https://web-production-9c72c.up.railway.app/api/chat/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

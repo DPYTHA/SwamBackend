@@ -22,6 +22,10 @@ import EditProfileScreen from './EditProfileScreen';
 import PromoCodesScreen from './PromoCodesScreen';
 import TrackingScreen from './TrackingScreen';
 import AdressesScreen from './AdressesScreen';
+import LivreurSuiviScreen from './LivreurSuiviScreen';
+import RestaurantsAssinieScreen from './RestaurantsAssinieScreen';
+import MenuCampementScreen from './MenuCampementScreen';
+import PanierScreen from './PanierScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -50,6 +54,11 @@ export default function App() {
           <Stack.Screen name='PromoCode' component={PromoCodesScreen}/>
           <Stack.Screen name='Track' component={TrackingScreen}/>
           <Stack.Screen name='Adresse' component={AdressesScreen}/>
+           <Stack.Screen name='LivreurSuivi' component={LivreurSuiviScreen}/>
+           <Stack.Screen name='Restaurant' component={RestaurantsAssinieScreen}/>
+           <Stack.Screen name='Campement' component={MenuCampementScreen}/>
+           <Stack.Screen name='Panier' component={PanierScreen}/>
+
 
 
 

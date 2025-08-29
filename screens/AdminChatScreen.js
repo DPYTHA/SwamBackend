@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 // Remplace par ton URL backend
-const API_URL = 'http://192.168.1.6:5000';
+const API_URL = 'https://web-production-9c72c.up.railway.app/';
 
 const AdminChatScreen = () => {
   const [clients, setClients] = useState([]);

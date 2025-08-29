@@ -8,7 +8,7 @@ const PromoCodesScreen = () => {
   const fetchPromoCodes = async () => {
     const token = await AsyncStorage.getItem('access_token');
     try {
-      const res = await fetch('http://192.168.1.5:5000/promo-codes', {
+      const res = await fetch('https://web-production-9c72c.up.railway.app/promo-codes', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

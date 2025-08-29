@@ -7,7 +7,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { Ionicons } from '@expo/vector-icons';
 
-const BACKEND_URL = 'http://192.168.1.6:5000';
+const BACKEND_URL = 'https://web-production-9c72c.up.railway.app/';
 
 const AdminDashboard = ({ navigation }) => {
   const [users, setUsers] = useState([]);

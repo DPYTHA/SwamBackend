@@ -71,7 +71,7 @@ const appelerLivreur = () => {
         console.error('Token manquant, impossible de faire la requête');
         return;
       }
-        const response = await fetch('http://192.168.1.5:5000/commandes', {
+        const response = await fetch('https://web-production-9c72c.up.railway.app/commandes', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -127,7 +127,7 @@ const appelerLivreur = () => {
       return;
     }
 
-    const response = await fetch(`http://192.168.1.5:5000/commande/by-tracking-code/${trackingCode}`, {
+    const response = await fetch(`https://web-production-9c72c.up.railway.app/commande/by-tracking-code/${trackingCode}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -208,13 +208,16 @@ const appelerLivreur = () => {
         >
           <Text style={styles.longBoxText}>Faire une commande</Text>
         </TouchableOpacity>
+<TouchableOpacity
+  style={styles.shortBox}
+  onPress={() => navigation.navigate('Services')}
+>
+  <Text style={styles.shortBoxText}>Quelques services</Text>
+  <Text style={styles.shortBoxSubText}>
+    restaurants, pharmacies, supermarchés
+  </Text>
+</TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.shortBox}
-          onPress={() => navigation.navigate('Services')}
-        >
-          <Text style={styles.shortBoxText}>Quelques services</Text>
-        </TouchableOpacity>
       </View>
 
       {/* HISTORIQUE DES COMMANDES */}
@@ -512,7 +515,7 @@ gap:5
     fontWeight: '600',
   },
   shortBox: {
-    backgroundColor: '#e7e3e3ce',
+    backgroundColor: '#dc7429ce',
     height: 60,
     width: '60%',
     borderRadius: 10,
@@ -526,6 +529,19 @@ gap:5
     fontSize: 16,
     fontWeight: '500',
   },
+  shortBoxText: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: 'white',
+},
+shortBoxSubText: {
+  fontSize: 10,
+  fontStyle: 'italic',
+  color: '#0f0b0bff',
+  marginTop: 2,
+  textAlign:'center'
+},
+
 
 
 });

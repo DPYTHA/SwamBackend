@@ -16,7 +16,7 @@ const LivreurScreen = ({ token }) => {
     if (!trackingCode.trim()) return;
 
     try {
-      const res = await fetch(`http://192.168.1.5:5000/commande/by-tracking-code/${trackingCode}`);
+      const res = await fetch(`https://web-production-9c72c.up.railway.app/commande/by-tracking-code/${trackingCode}`);
       const data = await res.json();
 
       if (res.ok) {
@@ -44,7 +44,7 @@ const LivreurScreen = ({ token }) => {
     }
 
     try {
-      const response = await fetch(`http://192.168.1.6:5000/api/livreur/${livreurId}/disponibilite`, {
+      const response = await fetch(`https://web-production-9c72c.up.railway.app/api/livreur/${livreurId}/disponibilite`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,6 +97,7 @@ const LivreurScreen = ({ token }) => {
           <Text style={styles.text}>Montant: {commande.montant_total} FCFA</Text>
         </View>
       )}
+      
 
       <View style={{ marginTop: 40, alignItems: 'center' }}>
         <Text style={styles.title}>📡 Ma disponibilité</Text>
@@ -105,6 +106,14 @@ const LivreurScreen = ({ token }) => {
           <Switch value={disponible} onValueChange={toggleDisponibilite} />
         </View>
       </View>
+
+        
+      <TouchableOpacity
+        style={styles.bouton}
+        onPress={() => navigation.navigate('LivreurSuivi',{ commande: commande })}
+      >
+        <Text style={styles.texte}>Donne ta position   </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -148,6 +157,17 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 10,
   },
+  bouton:{
+    width:200,
+    height:20,
+marginTop: 20,
+    backgroundColor:'orangered',
+    borderRadius:10
+  },
+  texte:{
+    color:"white",
+    textAlign:'center'
+  }
 });
 
 export default LivreurScreen;

@@ -22,7 +22,7 @@ const LivreurScreen = ({ token }) => {
     if (!trackingCode.trim()) return;
 
     try {
-      const res = await fetch(`http://192.168.1.5:5000/commande/by-tracking-code/${trackingCode}`);
+      const res = await fetch(`https://web-production-9c72c.up.railway.app/commande/by-tracking-code/${trackingCode}`);
       const data = await res.json();
 
       if (res.ok) {

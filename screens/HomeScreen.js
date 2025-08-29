@@ -11,6 +11,7 @@ import {
   PanResponder,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 const BUTTON_WIDTH = 60; // Largeur bouton slider
@@ -45,6 +46,7 @@ const HomeScreen = () => {
   ).current;
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         {/* Image locale depuis VSCode */}
@@ -99,7 +101,7 @@ const HomeScreen = () => {
         <Text style={styles.footerText}>© 2025 <Text style={{ color: 'orange' }}>Pythacademy</Text> – Tous droits réservés</Text>
         <Text style={styles.footerText}>Conçu avec ❤️ pour les communautés locales</Text>
       </View>
-    </ScrollView>
+    </ScrollView></SafeAreaView>
   );
 };
 
@@ -109,23 +111,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
-  header: {
+    header: {
     width: '90%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 10,
     justifyContent: 'space-between',
+    flexWrap: 'wrap', 
   },
+
   logo: {
     width: 60,
     height: 60, // Corrigé ici, height ne doit pas être 0
     resizeMode: 'contain',
   },
   brand: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
+  fontSize: 28,
+  fontWeight: '900',
+  color: '#000',
+},
+
   links: {
     flexDirection: 'row',
     gap: 10,

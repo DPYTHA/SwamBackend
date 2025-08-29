@@ -1,7 +1,0 @@
-env
-backend/env
-
-node_modules
-*.log
-*.tmp
-*.lock
