@@ -1,0 +1,48 @@
+# Ignorer Git
+.git/
+.gitignore
+
+# Ignorer node_modules (EAS les installe lui-même)
+node_modules/
+
+# Ignorer environnements virtuels Python
+env/
+venv/
+backend/env/
+__pycache__/
+
+# Fichiers inutiles
+*.log
+*.pyc
+.DS_Store
+# Éviter problèmes avec Expo
+assets/.DS_Store
+assets/*.log
+
+# Git
+.git/
+.gitignore
+
+# Node
+node_modules/
+
+# Python env
+env/
+backend/env/
+venv/
+__pycache__/
+
+# Fichiers inutiles
+*.log
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Problèmes Windows
+assets/.DS_Store
+assets/Thumbs.db
+assets/desktop.ini
+# Fichiers lourds inutiles
+backend/*.jar
+*.jar
